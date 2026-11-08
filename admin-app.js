@@ -119,7 +119,7 @@
      '<div class="stat-card">' +
        '<div class="stat-card__label"><span>参赛企业报名总数</span><span>🏢</span></div>' +
        '<div class="stat-card__val">' + stats.totalEnterprises + ' <span style="font-size:14px;font-weight:400;color:#64748b;">家</span></div>' +
-       '<div class="stat-card__hint">覆盖鞋服、新能源汽车、文具等6大核心行业</div>' +
+       '<div class="stat-card__hint">涉及制造业、互联网、新能源、快消等各类企业</div>' +
      '</div>' +
      '<div class="stat-card" style="border-left: 4px solid var(--admin-warning);">' +
        '<div class="stat-card__label"><span>待审企业资质申请</span><span>⏳</span></div>' +
@@ -207,7 +207,6 @@
            '<th>提交时间</th>' +
            '<th>企业名称</th>' +
            '<th>统一社会信用代码</th>' +
-           '<th>行业赛道</th>' +
            '<th>组长信息</th>' +
            '<th>营业执照 / Logo</th>' +
            '<th>审核状态</th>' +
@@ -224,7 +223,6 @@
                '<div style="font-size:11px;color:#64748b;">编号：' + e.id + '</div>' +
              '</td>' +
              '<td style="font-family:monospace;font-size:12px;">' + e.taxNo + '</td>' +
-             '<td><span class="tag tag--neutral">' + e.industry + '</span></td>' +
              '<td>' +
                '<div>' + e.leaderName + '</div>' +
                '<div style="font-size:12px;color:#64748b;font-family:monospace;">' + e.leaderPhone + '</div>' +
@@ -472,9 +470,8 @@
        '<thead>' +
          '<tr>' +
            '<th>选手姓名</th>' +
-           '<th>手机号 (唯一ID)</th>' +
-           '<th>所在高校 / 单位</th>' +
-           '<th>邀请裂变人数</th>' +
+           '<th>手机号</th>' +
+           '<th>成功邀请人数</th>' +
            '<th>影响力加成</th>' +
            '<th>会员 / 积分履约状态</th>' +
            '<th>碳账户打卡积分</th>' +
@@ -486,7 +483,6 @@
            '<tr>' +
              '<td style="font-weight:700;color:#04252b;">' + p.name + '</td>' +
              '<td style="font-family:monospace;">' + p.phone + '</td>' +
-             '<td>' + p.organization + '</td>' +
              '<td>' + p.inviteSuccessCount + ' 人</td>' +
              '<td><span class="tag tag--success">+' + p.bonusPercent + '%</span></td>' +
              '<td><span class="tag tag--success">' + p.benefitStatus + '</span></td>' +
@@ -561,23 +557,22 @@
  
    return '<div class="page-header">' +
      '<div class="page-header__left">' +
-       '<h2>📚 1对1 行业配对考题题库管理</h2>' +
-       '<p>产品碳考题（11.20 16:00 开放下载）与企业碳考题（11.30 00:00 开放下载）严格按行业 1对1 配对，支持自有产品与统一命题分配。</p>' +
+       '<h2>📚 1对1 配对考题库管理</h2>' +
+       '<p>产品碳考题（11.20 16:00 开放下载）与企业碳考题（11.30 00:00 开放下载）严格按题目 1对1 对应，供前台选择主办方产品的选手下载。</p>' +
      '</div>' +
      '<div class="page-header__actions">' +
-       '<button class="btn btn--primary" onclick="showToast(\'已打开新增考题包配置窗口\')">➕ 新增 1对1 行业考题包</button>' +
+       '<button class="btn btn--primary" onclick="showToast(\'已打开新增考题包配置窗口\')">➕ 新增 1对1 考题包</button>' +
      '</div>' +
    '</div>' +
    '<div class="alert-banner alert-banner--info">' +
      '<span>📌</span>' +
-     '<div><strong>考题配对与分配规则：</strong> 前台选手若选择「主办方产品」，系统自动为其分配对应行业的配对考题；若选择「自有产品」，企业碳非自有数据时则由系统从本题库匹配对应行业企业碳考题。</div>' +
+     '<div><strong>考题配对与分配规则：</strong> 产品碳和企业碳的考题一一对应。选手若选择「主办方产品」，系统匹配对应的考题包进行下载；选手若选择「自有产品」，则使用企业自身真实数据核算。</div>' +
    '</div>' +
    '<div class="admin-table-container">' +
      '<table class="admin-table">' +
        '<thead>' +
          '<tr>' +
            '<th>配对题号</th>' +
-           '<th>行业分类</th>' +
            '<th>任务一：产品碳足迹考题 (11.20开放)</th>' +
            '<th>任务二：企业碳盘查考题 (11.30开放)</th>' +
            '<th>已分配队伍</th>' +
@@ -590,7 +585,6 @@
          list.map(q => (
            '<tr>' +
              '<td style="font-family:monospace;font-weight:700;color:#026961;">' + q.pairCode + '</td>' +
-             '<td><span class="tag tag--neutral">' + q.industry + '</span></td>' +
              '<td>' +
                '<div style="font-weight:600;">' + q.prodTaskTitle + '</div>' +
                '<div style="font-size:11px;color:#64748b;">附件：' + q.prodPkgFile + ' · ' + q.prodOpenTime + '</div>' +
@@ -653,7 +647,7 @@
          list.map(r => (
            '<tr>' +
              '<td style="font-weight:700;color:#04252b;">' + r.teamName + '</td>' +
-             '<td>' + (r.trackChoice === 'SELF_OWNED' ? '<span class="tag tag--info">自有产品真实数据</span>' : '<span class="tag tag--neutral">主办方标准题</span>') + '</td>' +
+             '<td>' + (r.trackChoice === 'SELF_OWNED' ? '<span class="tag tag--info">自有产品</span>' : '<span class="tag tag--neutral">主办方产品</span>') + '</td>' +
              '<td><a href="' + r.prodModelUrl + '" target="_blank" style="color:#026961;text-decoration:none;font-size:12px;">🔗 查看产品碳模型</a></td>' +
              '<td><a href="' + r.corpModelUrl + '" target="_blank" style="color:#026961;text-decoration:none;font-size:12px;">🔗 查看企业碳模型</a></td>' +
              '<td><strong style="color:#026961;">' + r.cProdScore + '</strong> / 40</td>' +
@@ -807,11 +801,10 @@
          '<table class="admin-table">' +
            '<thead>' +
              '<tr>' +
-               '<th>排名</th>' +
-               '<th>选手姓名</th>' +
-               '<th>带动人数</th>' +
-               '<th>累计打卡积分</th>' +
-               '<th>E阶段折算分</th>' +
+           '<th>排名</th>' +
+           '<th>选手姓名</th>' +
+           '<th>累计打卡积分</th>' +
+           '<th>E阶段折算分</th>' +
              '</tr>' +
            '</thead>' +
            '<tbody>' +
@@ -819,7 +812,6 @@
                '<tr>' +
                  '<td><strong>#' + i.rank + '</strong></td>' +
                  '<td>' + i.playerName + '</td>' +
-                 '<td>' + i.inviteUsersCount + ' 人</td>' +
                  '<td><strong style="color:#026961;">' + i.totalPoints + '</strong></td>' +
                  '<td><span class="tag tag--success">' + i.convertedEScore + ' / 20</span></td>' +
                '</tr>'
@@ -898,26 +890,26 @@
          '</thead>' +
          '<tbody>' +
            '<tr>' +
-             '<td><span class="tag tag--warning">👑 特等奖</span></td>' +
+             '<td><span class="tag tag--warning">🥇 金奖 (1名)</span></td>' +
              '<td style="font-weight:700;">小鹏科技 · 绿色智行先锋队</td>' +
              '<td><strong style="color:#e11d48;">95.5</strong></td>' +
-             '<td>GCMC 年度企业低碳卓越标杆奖</td>' +
+             '<td>首届中国企业碳管理大赛金奖</td>' +
              '<td style="font-family:monospace;">GCMC-2026-CERT-0001</td>' +
              '<td><span class="tag tag--success">已同步前台</span></td>' +
            '</tr>' +
            '<tr>' +
-             '<td><span class="tag tag--warning">🥇 金奖</span></td>' +
+             '<td><span class="tag tag--info">🥈 银奖 (2名)</span></td>' +
              '<td style="font-weight:700;">安踏体育 · 零碳跑者战队</td>' +
              '<td><strong style="color:#e11d48;">92.0</strong></td>' +
-             '<td>首届中国企业碳管理大赛金奖</td>' +
+             '<td>首届中国企业碳管理大赛银奖</td>' +
              '<td style="font-family:monospace;">GCMC-2026-CERT-0002</td>' +
              '<td><span class="tag tag--success">已同步前台</span></td>' +
            '</tr>' +
            '<tr>' +
-             '<td><span class="tag tag--info">🥈 银奖</span></td>' +
+             '<td><span class="tag tag--neutral" style="color:#b45309;background:#fef3c7;">🥉 铜奖 (3名)</span></td>' +
              '<td style="font-weight:700;">得力集团绿色办公科技有限公司</td>' +
              '<td><strong style="color:#e11d48;">82.5</strong></td>' +
-             '<td>首届中国企业碳管理大赛银奖</td>' +
+             '<td>首届中国企业碳管理大赛铜奖</td>' +
              '<td style="font-family:monospace;">GCMC-2026-CERT-0003</td>' +
              '<td><span class="tag tag--success">已同步前台</span></td>' +
            '</tr>' +
