@@ -1,0 +1,118 @@
+ <!DOCTYPE html>
+ <html lang="zh-CN">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>首届中国企业碳管理大赛 · 运营管理后台（GCMC Admin 原型）</title>
+   <link rel="stylesheet" href="./admin-styles.css" />
+ </head>
+ <body>
+   <!-- 顶部原型控制与联动操作条 -->
+   <div class="sim-toolbar">
+     <div class="sim-toolbar__left">
+       <span class="sim-badge">GCMC Admin 原型控制台</span>
+       <span>📅 赛程阶段控制：</span>
+       <select id="stage-select" class="filter-select" style="height:26px; font-size:11px; padding:0 20px 0 8px; background-color:#0b2e36; color:#e2e8f0; border-color:#164e5b;" onchange="handleStageChange(this.value)">
+         <option value="S1_REGISTER">1. 报名与组队中 (11.16 - 11.27)</option>
+         <option value="S2_PRELIM_IN_PROGRESS" selected>2. 初赛进行中 (11.22 - 12.06 C+E阶段)</option>
+         <option value="S3_PRELIM_AUDIT">3. 初赛评阅与核验 (12.07 - 12.08)</option>
+         <option value="S4_PRELIM_PUBLISHED">4. 初赛入围名单公示 (12.09)</option>
+         <option value="S5_FINALS_PREP">5. 决赛准备与评审答辩 (12.09 - 12.15 R/O/S阶段)</option>
+         <option value="S6_GCMC_PUBLISHED">6. GCMC 最终获奖名单发布 (12.18)</option>
+       </select>
+     </div>
+     <div class="sim-toolbar__right">
+       <button class="sim-btn" onclick="openFrontPortal()">🌐 打开大赛前台页 (本地/公网)</button>
+       <button class="sim-btn" onclick="resetDemoData()">🔄 重置仿真数据</button>
+     </div>
+   </div>
+ 
+   <!-- Admin 后台整体布局 -->
+   <div class="admin-layout">
+     <!-- 全局顶栏 -->
+     <header class="admin-header">
+       <div class="admin-brand">
+         <div class="admin-brand__logo">G</div>
+         <div>
+           <span class="admin-brand__title">首届中国企业碳管理大赛 · 运营管理中枢</span>
+           <span class="admin-brand__tag">GCMC Admin v1.0</span>
+         </div>
+       </div>
+       <div class="admin-header__tools">
+         <div class="admin-stage-indicator">
+           <span class="dot"></span>
+           <span id="current-stage-text">当前阶段：初赛进行中 (C+E阶段)</span>
+         </div>
+         <div class="admin-user-pill">
+           <div class="admin-user-avatar">管</div>
+           <span>赛事主运营 (超级管理员)</span>
+         </div>
+       </div>
+     </header>
+ 
+     <!-- 主体：侧边栏 + 内容区 -->
+     <div class="admin-body">
+       <!-- 左侧六大核心模块导航 -->
+       <aside class="admin-sider">
+         <div class="sider-section-label">核心运营</div>
+         <div class="admin-menu-item active" data-tab="overview" onclick="switchNav('overview')">
+           <div class="admin-menu-item__left">
+             <span class="admin-menu-item__icon">📊</span>
+             <span>赛事运行总览</span>
+           </div>
+         </div>
+         <div class="admin-menu-item" data-tab="audit" onclick="switchNav('audit')">
+           <div class="admin-menu-item__left">
+             <span class="admin-menu-item__icon">🏢</span>
+             <span>1. 企业资质审核</span>
+           </div>
+           <span class="admin-menu-badge" id="menu-audit-badge">2</span>
+         </div>
+         <div class="admin-menu-item" data-tab="teams" onclick="switchNav('teams')">
+           <div class="admin-menu-item__left">
+             <span class="admin-menu-item__icon">👥</span>
+             <span>2. 参赛组队与权益</span>
+           </div>
+         </div>
+         <div class="admin-menu-item" data-tab="questions" onclick="switchNav('questions')">
+           <div class="admin-menu-item__left">
+             <span class="admin-menu-item__icon">📚</span>
+             <span>3. 考题题库与配对</span>
+           </div>
+         </div>
+         <div class="sider-section-label">评审与赛果</div>
+         <div class="admin-menu-item" data-tab="review" onclick="switchNav('review')">
+           <div class="admin-menu-item__left">
+             <span class="admin-menu-item__icon">✍️</span>
+             <span>4. CREOS 评审打分</span>
+           </div>
+         </div>
+         <div class="admin-menu-item" data-tab="checkin" onclick="switchNav('checkin')">
+           <div class="admin-menu-item__left">
+             <span class="admin-menu-item__icon">📱</span>
+             <span>5. 碳账户打卡同步</span>
+           </div>
+         </div>
+         <div class="admin-menu-item" data-tab="publish" onclick="switchNav('publish')">
+           <div class="admin-menu-item__left">
+             <span class="admin-menu-item__icon">🏆</span>
+             <span>6. 赛果公示与发布</span>
+           </div>
+         </div>
+       </aside>
+ 
+       <!-- 右侧主工作台 -->
+       <main class="admin-main" id="admin-main-content">
+         <!-- 动态注入各模块视图 -->
+       </main>
+     </div>
+   </div>
+ 
+   <!-- 全局弹窗挂载点 -->
+   <div id="modal-root"></div>
+   <div id="toast-container"></div>
+ 
+   <script src="./admin-data.js"></script>
+   <script src="./admin-app.js"></script>
+ </body>
+ </html>

@@ -1,0 +1,12 @@
+ {
+   "name": "carbon-competition-admin",
+   "version": "1.0.0",
+   "description": "首届中国企业碳管理大赛 · 运营管理后台原型系统",
+   "main": "index.html",
+   "scripts": {
+     "start": "npx serve -l 3005 ."
+   },
+   "keywords": ["carbon", "admin", "prototype", "competition"],
+   "author": "CarbonStop",
+   "license": "MIT"
+ }
