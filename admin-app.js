@@ -5,7 +5,7 @@
    teamsTab: 'ENTERPRISE',
    teamsSearch: '',
    selectedTeamDetail: null,
-   reviewTab: 'PRELIM_C',
+   reviewTab: 'PRELIM_C_ENT',
    data: JSON.parse(JSON.stringify(ADMIN_INITIAL_DATA)),
  };
  
@@ -132,9 +132,9 @@
        '<div class="stat-card__hint">企业战队 168 人 · 个人组选手 50 人</div>' +
      '</div>' +
      '<div class="stat-card" style="border-left: 4px solid var(--admin-success);">' +
-       '<div class="stat-card__label"><span>权益发放履约率 (月度VIP/1000积分)</span><span>🎁</span></div>' +
-       '<div class="stat-card__val" style="color:var(--admin-success);">' + stats.vipOrPointsGranted + ' <span style="font-size:14px;font-weight:400;color:#64748b;">人 (90%)</span></div>' +
-       '<div class="stat-card__hint">已全部自动下发短信通知激活</div>' +
+       '<div class="stat-card__label"><span>初赛C阶段模型提交数</span><span>📝</span></div>' +
+       '<div class="stat-card__val" style="color:var(--admin-success);">' + stats.cSubmittedCount + ' <span style="font-size:14px;font-weight:400;color:#64748b;">份</span></div>' +
+       '<div class="stat-card__hint">产品碳足迹与企业碳盘查模型</div>' +
      '</div>' +
    '</div>' +
    '<div class="admin-card">' +
@@ -408,12 +408,11 @@
  
    return '<div class="page-header">' +
      '<div class="page-header__left">' +
-       '<h2>👥 参赛队伍花名册、邀请加成与权益发放</h2>' +
-       '<p>管理企业组战队成员（3~10人）与个人组选手。监控裂变邀请人数、影响力加成百分比（最高10%）及会员/积分发放状态。</p>' +
+       '<h2>👥 参赛队伍花名册与邀请加成管理</h2>' +
+       '<p>管理企业组战队成员（3~10人）与个人组选手，监控裂变邀请人数及影响力加成百分比（最高10%）。</p>' +
      '</div>' +
      '<div class="page-header__actions">' +
        '<button class="btn btn--secondary" onclick="showToast(\'已导出《首届中国企业碳管理大赛_参赛选手总花名册.xlsx》\')">📥 导出参赛花名册 (Excel)</button>' +
-       '<button class="btn btn--primary" onclick="showToast(\'已重新校验并批量补发未开通权益，并下发短信通知！\');">⚡ 批量补发未到账权益</button>' +
      '</div>' +
    '</div>' +
    '<div style="display:flex; gap:10px; margin-bottom:16px;">' +
@@ -455,7 +454,7 @@
              '<td><span class="tag tag--success">+' + (ent.bonusPercent || 0) + '%</span></td>' +
              '<td><span style="font-size:12px;color:#64748b;">全队 ' + submittedCount + ' / ' + t.members.length + ' 人双项已交</span></td>' +
              '<td style="text-align:right;">' +
-               '<button class="btn btn--sm btn--primary" onclick="viewTeamMembersModal(\'' + t.teamId + '\')">查看组员与权益</button>' +
+               '<button class="btn btn--sm btn--primary" onclick="viewTeamMembersModal(\'' + t.teamId + '\')">查看组员名单</button>' +
              '</td>' +
            '</tr>';
          }).join('') +
@@ -473,9 +472,7 @@
            '<th>手机号</th>' +
            '<th>成功邀请人数</th>' +
            '<th>影响力加成</th>' +
-           '<th>会员 / 积分履约状态</th>' +
            '<th>碳账户打卡积分</th>' +
-           '<th style="text-align:right;">操作</th>' +
          '</tr>' +
        '</thead>' +
        '<tbody>' +
@@ -485,11 +482,7 @@
              '<td style="font-family:monospace;">' + p.phone + '</td>' +
              '<td>' + p.inviteSuccessCount + ' 人</td>' +
              '<td><span class="tag tag--success">+' + p.bonusPercent + '%</span></td>' +
-             '<td><span class="tag tag--success">' + p.benefitStatus + '</span></td>' +
              '<td><strong style="color:#026961;">' + p.checkinPoints + '</strong> 分</td>' +
-             '<td style="text-align:right;">' +
-               '<button class="btn btn--sm btn--secondary" onclick="showToast(\'已向 ' + p.name + ' 重新补发月度会员并发送短信通知\')">补发权益</button>' +
-             '</td>' +
            '</tr>'
          )).join('') +
        '</tbody>' +
@@ -522,7 +515,6 @@
                  '<th>手机号</th>' +
                  '<th>邀请人来源</th>' +
                  '<th>注册状态</th>' +
-                 '<th>会员权益发放</th>' +
                  '<th>产品碳提交</th>' +
                  '<th>企业碳提交</th>' +
                '</tr>' +
@@ -535,7 +527,6 @@
                    '<td style="font-family:monospace;">' + m.phone + '</td>' +
                    '<td>' + (m.inviter === '-' ? '-' : '<span class="tag tag--info">由 ' + m.inviter + ' 邀请</span>') + '</td>' +
                    '<td>' + (m.regStatus === '已注册' ? '<span class="tag tag--success">已注册</span>' : '<span class="tag tag--danger">未注册</span>') + '</td>' +
-                   '<td><span class="tag tag--success">' + m.benefitStatus + '</span></td>' +
                    '<td>' + (m.cProdStatus === '已提交' ? '<span class="tag tag--success">已交 (' + m.cProdScore + '分)</span>' : '<span class="tag tag--neutral">' + m.cProdStatus + '</span>') + '</td>' +
                    '<td>' + (m.cEntStatus === '已提交' ? '<span class="tag tag--success">已交 (' + m.cEntScore + '分)</span>' : '<span class="tag tag--neutral">' + m.cEntStatus + '</span>') + '</td>' +
                  '</tr>'
@@ -609,58 +600,107 @@
  function renderReviewView() {
    const list = adminState.data.creosReviews;
  
+   const tab = adminState.reviewTab;
    return '<div class="page-header">' +
      '<div class="page-header__left">' +
        '<h2>✍️ CREOS 专家评审与在线打分系统</h2>' +
-       '<p>支持在线调阅 Carbon Agent 建模链接，产品碳 (40分) + 企业碳 (40分)，企业组支持全员提交系统自动计算全队算术均分。</p>' +
+       '<p>支持在线调阅 Carbon Agent 建模链接。初赛分设企业组与个人组独立打分：企业组进入战队详情逐一对组员打分并自动汇总全队均分；个人组直接评阅打分。</p>' +
      '</div>' +
      '<div class="page-header__actions">' +
        '<button class="btn btn--secondary" onclick="showToast(\'正在导出专家评审汇总打分表 (Excel)...\')">📥 导出评审打分表</button>' +
      '</div>' +
    '</div>' +
    '<div style="display:flex; gap:10px; margin-bottom:16px;">' +
-     '<button class="btn ' + (adminState.reviewTab==='PRELIM_C'?'btn--primary':'btn--secondary') + '" onclick="adminState.reviewTab=\'PRELIM_C\';renderCurrentView();">初赛 C 阶段评审 (产品碳 40 + 企业碳 40)</button>' +
-     '<button class="btn ' + (adminState.reviewTab==='FINAL_ROS'?'btn--primary':'btn--secondary') + '" onclick="adminState.reviewTab=\'FINAL_ROS\';renderCurrentView();">决赛 R / O / S 方案与现场答辩评审 (100分)</button>' +
+     '<button class="btn ' + (tab==='PRELIM_C_ENT'?'btn--primary':'btn--secondary') + '" onclick="adminState.reviewTab=\'PRELIM_C_ENT\';renderCurrentView();">🏢 初赛 C 阶段 · 企业组评审 (全队均分)</button>' +
+     '<button class="btn ' + (tab==='PRELIM_C_IND'?'btn--primary':'btn--secondary') + '" onclick="adminState.reviewTab=\'PRELIM_C_IND\';renderCurrentView();">👤 初赛 C 阶段 · 个人组评审</button>' +
+     '<button class="btn ' + (tab==='FINAL_ROS'?'btn--primary':'btn--secondary') + '" onclick="adminState.reviewTab=\'FINAL_ROS\';renderCurrentView();">🏆 决赛 R / O / S 方案与答辩评审 (100分)</button>' +
    '</div>' +
-   (adminState.reviewTab === 'PRELIM_C' ? renderPrelimCReviewTable(list) : renderFinalRosReviewTable(list));
+   (tab === 'PRELIM_C_ENT' ? renderPrelimCEntTable(list) : (tab === 'PRELIM_C_IND' ? renderPrelimCIndTable() : renderFinalRosReviewTable(list)));
  }
  
- function renderPrelimCReviewTable(list) {
-   return '<div class="admin-table-container">' +
+ function renderPrelimCEntTable(list) {
+   return '<div class="alert-banner alert-banner--info">' +
+     '<span>💡</span>' +
+     '<div><strong>企业组评审规则：</strong> 点击「进入战队打分」进入详情页，专家对战队中每一位提交模型的组员进行独立评分，系统自动计算组员总分及<strong>全队算术平均分</strong>。</div>' +
+   '</div>' +
+   '<div class="admin-table-container">' +
      '<table class="admin-table">' +
        '<thead>' +
          '<tr>' +
-           '<th>战队 / 企业名称</th>' +
+           '<th>战队企业名称</th>' +
            '<th>核算对象来源</th>' +
-           '<th>产品碳模型链接</th>' +
-           '<th>企业碳模型链接</th>' +
-           '<th>产品碳打分 (40分)</th>' +
-           '<th>企业碳打分 (40分)</th>' +
+           '<th>战队总人数</th>' +
+           '<th>已提交组员数</th>' +
            '<th>C阶段全队均分 (80分)</th>' +
-           '<th>打卡分 (20分)</th>' +
+           '<th>E阶段打卡分 (20分)</th>' +
            '<th>加成系数</th>' +
            '<th>初赛总分</th>' +
            '<th style="text-align:right;">操作</th>' +
          '</tr>' +
        '</thead>' +
        '<tbody>' +
-         list.map(r => (
-           '<tr>' +
+         list.map(r => {
+           const team = adminState.data.teamRoster.find(t => t.teamId === r.teamId) || { members: [] };
+           const submittedCount = team.members.filter(m => m.cProdStatus === '已提交' && m.cEntStatus === '已提交').length;
+           return '<tr>' +
              '<td style="font-weight:700;color:#04252b;">' + r.teamName + '</td>' +
              '<td>' + (r.trackChoice === 'SELF_OWNED' ? '<span class="tag tag--info">自有产品</span>' : '<span class="tag tag--neutral">主办方产品</span>') + '</td>' +
-             '<td><a href="' + r.prodModelUrl + '" target="_blank" style="color:#026961;text-decoration:none;font-size:12px;">🔗 查看产品碳模型</a></td>' +
-             '<td><a href="' + r.corpModelUrl + '" target="_blank" style="color:#026961;text-decoration:none;font-size:12px;">🔗 查看企业碳模型</a></td>' +
-             '<td><strong style="color:#026961;">' + r.cProdScore + '</strong> / 40</td>' +
-             '<td><strong style="color:#026961;">' + r.cEntScore + '</strong> / 40</td>' +
-             '<td><span class="tag tag--info">' + r.cTeamAvgScore + ' 分</span></td>' +
+             '<td>' + team.members.length + ' 人</td>' +
+             '<td><span class="tag tag--info">' + submittedCount + ' / ' + team.members.length + ' 人</span></td>' +
+             '<td><strong style="color:#026961;font-size:14px;">' + r.cTeamAvgScore + ' 分</strong></td>' +
              '<td>' + r.eCheckinScore + ' 分</td>' +
              '<td><span class="tag tag--success">+' + Math.round(r.bonusRatio*100) + '%</span></td>' +
              '<td><strong style="color:#e11d48;font-size:15px;">' + r.prelimTotalScore + '</strong></td>' +
              '<td style="text-align:right;">' +
-               '<button class="btn btn--sm btn--primary" onclick="openScoringModal(\'' + r.teamId + '\')">评阅打分</button>' +
+               '<button class="btn btn--sm btn--primary" onclick="openTeamMemberScoringDetail(\'' + r.teamId + '\')">进入战队逐人打分</button>' +
              '</td>' +
-           '</tr>'
-         )).join('') +
+           '</tr>';
+         }).join('') +
+       '</tbody>' +
+     '</table>' +
+   '</div>';
+ }
+ 
+ function renderPrelimCIndTable() {
+   const list = adminState.data.individualPlayers;
+   return '<div class="alert-banner alert-banner--info">' +
+     '<span>💡</span>' +
+     '<div><strong>个人组评审规则：</strong> 专家直接调阅个人选手的 Carbon Agent 产品碳模型 (40分) 与 企业碳模型 (40分) 分项打分，核算总分并自动与 E 阶段打卡分及加成系数合成初赛总分。</div>' +
+   '</div>' +
+   '<div class="admin-table-container">' +
+     '<table class="admin-table">' +
+       '<thead>' +
+         '<tr>' +
+           '<th>选手姓名</th>' +
+           '<th>手机号</th>' +
+           '<th>产品碳得分 (40分)</th>' +
+           '<th>企业碳得分 (40分)</th>' +
+           '<th>C阶段总分 (80分)</th>' +
+           '<th>E阶段打卡分 (20分)</th>' +
+           '<th>加成系数</th>' +
+           '<th>初赛总分</th>' +
+           '<th style="text-align:right;">操作</th>' +
+         '</tr>' +
+       '</thead>' +
+       '<tbody>' +
+         list.map(p => {
+           const cTotal = (p.cProdScore || 0) + (p.cEntScore || 0);
+           const eScore = p.convertedEScore || (p.checkinPoints > 2000 ? 19.0 : 16.0);
+           const prelimTotal = Math.min(100, Math.round(((cTotal + eScore) * (1 + (p.bonusPercent||0)/100)) * 10) / 10);
+           return '<tr>' +
+             '<td style="font-weight:700;color:#04252b;">' + p.name + '</td>' +
+             '<td style="font-family:monospace;">' + p.phone + '</td>' +
+             '<td><strong style="color:#026961;">' + (p.cProdScore || 0) + '</strong> / 40</td>' +
+             '<td><strong style="color:#026961;">' + (p.cEntScore || 0) + '</strong> / 40</td>' +
+             '<td><span class="tag tag--info">' + cTotal + ' 分</span></td>' +
+             '<td>' + eScore + ' 分</td>' +
+             '<td><span class="tag tag--success">+' + (p.bonusPercent || 0) + '%</span></td>' +
+             '<td><strong style="color:#e11d48;font-size:15px;">' + prelimTotal + '</strong></td>' +
+             '<td style="text-align:right;">' +
+               '<button class="btn btn--sm btn--primary" onclick="openIndividualScoringModal(\'' + p.id + '\')">评阅打分</button>' +
+             '</td>' +
+           '</tr>';
+         }).join('') +
        '</tbody>' +
      '</table>' +
    '</div>';
@@ -701,47 +741,161 @@
    '</div>';
  }
  
- function openScoringModal(teamId) {
+ function openTeamMemberScoringDetail(teamId) {
    const record = adminState.data.creosReviews.find(r => r.teamId === teamId);
-   if (!record) return;
+   const team = adminState.data.teamRoster.find(t => t.teamId === teamId);
+   if (!record || !team) return;
+ 
+   const modalRoot = document.getElementById('modal-root');
+   modalRoot.innerHTML = '<div class="modal-overlay" onclick="closeModal()">' +
+     '<div class="modal-dialog modal-dialog--lg" style="max-width:980px;" onclick="event.stopPropagation()">' +
+       '<div class="modal-header">' +
+         '<div class="modal-title">🏢 战队成员逐人评审与均分打分台 · ' + team.teamName + '</div>' +
+         '<button class="modal-close" onclick="closeModal()">×</button>' +
+       '</div>' +
+       '<div class="modal-body">' +
+         '<div class="alert-banner alert-banner--success" style="margin-bottom:14px;">' +
+           '<span>📊</span>' +
+           '<div>当前战队已交组员共 <strong>' + team.members.filter(m => m.cProdStatus==='已提交'&&m.cEntStatus==='已提交').length + '</strong> 人。系统自动实时汇总所有组员得分并求算术平均值作为该战队 C 阶段最终均分（当前全队均分：<strong style="color:#026961;">' + record.cTeamAvgScore + ' 分</strong>）。</div>' +
+         '</div>' +
+         '<div class="admin-table-container">' +
+           '<table class="admin-table">' +
+             '<thead>' +
+               '<tr>' +
+                 '<th>组员身份</th>' +
+                 '<th>姓名</th>' +
+                 '<th>手机号</th>' +
+                 '<th>产品碳提交状态</th>' +
+                 '<th>企业碳提交状态</th>' +
+                 '<th>产品碳评分 (40分)</th>' +
+                 '<th>企业碳评分 (40分)</th>' +
+                 '<th>个人C项总分 (80分)</th>' +
+                 '<th style="text-align:right;">操作</th>' +
+               '</tr>' +
+             '</thead>' +
+             '<tbody>' +
+               team.members.map((m, idx) => (
+                 '<tr>' +
+                   '<td>' + (m.role === '组长' ? '<span class="tag tag--warning">👑 组长</span>' : '<span class="tag tag--neutral">组员</span>') + '</td>' +
+                   '<td style="font-weight:700;">' + m.name + '</td>' +
+                   '<td style="font-family:monospace;font-size:12px;">' + m.phone + '</td>' +
+                   '<td>' + (m.cProdStatus === '已提交' ? '<a href="' + record.prodModelUrl + '" target="_blank" style="color:#026961;text-decoration:none;font-size:12px;">🔗 产品碳模型</a>' : '<span class="tag tag--neutral">' + m.cProdStatus + '</span>') + '</td>' +
+                   '<td>' + (m.cEntStatus === '已提交' ? '<a href="' + record.corpModelUrl + '" target="_blank" style="color:#026961;text-decoration:none;font-size:12px;">🔗 企业碳模型</a>' : '<span class="tag tag--neutral">' + m.cEntStatus + '</span>') + '</td>' +
+                   '<td><input type="number" step="0.5" max="40" min="0" value="' + (m.cProdScore || 0) + '" id="prod-score-' + idx + '" class="search-input" style="width:70px;height:30px;padding:0 6px;" /></td>' +
+                   '<td><input type="number" step="0.5" max="40" min="0" value="' + (m.cEntScore || 0) + '" id="ent-score-' + idx + '" class="search-input" style="width:70px;height:30px;padding:0 6px;" /></td>' +
+                   '<td><strong style="color:#026961;">' + ((m.cProdScore || 0) + (m.cEntScore || 0)) + '</strong> 分</td>' +
+                   '<td style="text-align:right;">' +
+                     '<button class="btn btn--sm btn--secondary" onclick="openMemberDetailedRubric(\'' + team.teamId + '\', ' + idx + ')">分项细则打分</button>' +
+                   '</td>' +
+                 '</tr>'
+               )).join('') +
+             '</tbody>' +
+           '</table>' +
+         '</div>' +
+       '</div>' +
+       '<div class="modal-footer">' +
+         '<button class="btn btn--secondary" onclick="closeModal()">取消</button>' +
+         '<button class="btn btn--primary" onclick="saveTeamMemberScores(\'' + team.teamId + '\')">💾 保存组员打分并重新计算全队均分</button>' +
+       '</div>' +
+     '</div>' +
+   '</div>';
+ }
+ 
+ function saveTeamMemberScores(teamId) {
+   const team = adminState.data.teamRoster.find(t => t.teamId === teamId);
+   const record = adminState.data.creosReviews.find(r => r.teamId === teamId);
+   if (!team || !record) return;
+ 
+   let totalC = 0;
+   let count = 0;
+   team.members.forEach((m, idx) => {
+     const prodInput = document.getElementById('prod-score-' + idx);
+     const entInput = document.getElementById('ent-score-' + idx);
+     if (prodInput) m.cProdScore = parseFloat(prodInput.value) || 0;
+     if (entInput) m.cEntScore = parseFloat(entInput.value) || 0;
+     if (m.cProdStatus === '已提交' || m.cEntStatus === '已提交') {
+       totalC += (m.cProdScore + m.cEntScore);
+       count++;
+     }
+   });
+ 
+   if (count > 0) {
+     record.cTeamAvgScore = Math.round((totalC / count) * 10) / 10;
+     record.prelimTotalScore = Math.min(100, Math.round(((record.cTeamAvgScore + record.eCheckinScore) * (1 + record.bonusRatio)) * 10) / 10);
+   }
+ 
+   closeModal();
+   renderCurrentView();
+   showToast('全队 ' + count + ' 位组员打分已保存！新计算 C 阶段均分：' + record.cTeamAvgScore + ' 分');
+ }
+ 
+ function openIndividualScoringModal(playerId) {
+   const player = adminState.data.individualPlayers.find(p => p.id === playerId);
+   if (!player) return;
  
    const modalRoot = document.getElementById('modal-root');
    modalRoot.innerHTML = '<div class="modal-overlay" onclick="closeModal()">' +
      '<div class="modal-dialog modal-dialog--lg" onclick="event.stopPropagation()">' +
        '<div class="modal-header">' +
-         '<div class="modal-title">✍️ C 阶段量化碳排放评审打分 · ' + record.teamName + '</div>' +
+         '<div class="modal-title">✍️ 个人组选手 C 阶段评阅打分 · ' + player.name + ' (' + player.phone + ')</div>' +
          '<button class="modal-close" onclick="closeModal()">×</button>' +
        '</div>' +
        '<div class="modal-body">' +
          '<div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">' +
            '<div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0;">' +
-             '<h4 style="color:#026961; margin-bottom:12px;">任务一：产品碳足迹核算模型 (满分40分)</h4>' +
-             '<div style="font-size:12px; margin-bottom:10px;"><a href="' + record.prodModelUrl + '" target="_blank" style="color:#026961; text-decoration:none;">🔗 点击调阅 Carbon Agent 产品碳模型详情</a></div>' +
+             '<h4 style="color:#026961; margin-bottom:12px;">任务一：个人产品碳足迹核算模型 (40分)</h4>' +
+             '<div style="font-size:12px; margin-bottom:10px;"><a href="https://agent.carbonstop.com/share/ind-pcf-model-2026-demo" target="_blank" style="color:#026961; text-decoration:none;">🔗 点击调阅选手的 Carbon Agent 产品碳模型</a></div>' +
              '<div style="display:flex; flex-direction:column; gap:8px; font-size:13px;">' +
-               '<label>1. 系统边界与生命周期功能单位 (8分)：</label><input type="number" max="8" min="0" value="7.5" class="search-input" style="width:100%;" />' +
-               '<label>2. BOM物料清单与活动数据质量 (10分)：</label><input type="number" max="10" min="0" value="9.5" class="search-input" style="width:100%;" />' +
-               '<label>3. 因子库选取与分配逻辑 (10分)：</label><input type="number" max="10" min="0" value="9.5" class="search-input" style="width:100%;" />' +
-               '<label>4. 建模严密性与热点敏感度分析 (12分)：</label><input type="number" max="12" min="0" value="11.0" class="search-input" style="width:100%;" />' +
+               '<label>1. 系统边界与生命周期功能单位 (8分)：</label><input type="number" id="ind-p1" max="8" min="0" value="7.5" class="search-input" style="width:100%;" />' +
+               '<label>2. BOM物料清单与活动数据质量 (10分)：</label><input type="number" id="ind-p2" max="10" min="0" value="9.5" class="search-input" style="width:100%;" />' +
+               '<label>3. 因子库选取与分配逻辑 (10分)：</label><input type="number" id="ind-p3" max="10" min="0" value="9.5" class="search-input" style="width:100%;" />' +
+               '<label>4. 建模严密性与热点分析 (12分)：</label><input type="number" id="ind-p4" max="12" min="0" value="11.5" class="search-input" style="width:100%;" />' +
              '</div>' +
            '</div>' +
            '<div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0;">' +
-             '<h4 style="color:#026961; margin-bottom:12px;">任务二：企业组织碳盘查模型 (满分40分)</h4>' +
-             '<div style="font-size:12px; margin-bottom:10px;"><a href="' + record.corpModelUrl + '" target="_blank" style="color:#026961; text-decoration:none;">🔗 点击调阅 Carbon Agent 企业碳模型详情</a></div>' +
+             '<h4 style="color:#026961; margin-bottom:12px;">任务二：个人企业碳盘查模型 (40分)</h4>' +
+             '<div style="font-size:12px; margin-bottom:10px;"><a href="https://agent.carbonstop.com/share/ind-ocf-model-2026-demo" target="_blank" style="color:#026961; text-decoration:none;">🔗 点击调阅选手的 Carbon Agent 企业碳模型</a></div>' +
              '<div style="display:flex; flex-direction:column; gap:8px; font-size:13px;">' +
-               '<label>1. 组织边界与运营控制权清晰度 (6分)：</label><input type="number" max="6" min="0" value="5.8" class="search-input" style="width:100%;" />' +
-               '<label>2. 范围一直接温室气体排放核算 (10分)：</label><input type="number" max="10" min="0" value="9.5" class="search-input" style="width:100%;" />' +
-               '<label>3. 范围二电力与热力双轨报告 (10分)：</label><input type="number" max="10" min="0" value="9.0" class="search-input" style="width:100%;" />' +
-               '<label>4. 范围三价值链排查与底稿证据链 (14分)：</label><input type="number" max="14" min="0" value="12.5" class="search-input" style="width:100%;" />' +
+               '<label>1. 组织边界与运营控制权清晰度 (6分)：</label><input type="number" id="ind-e1" max="6" min="0" value="5.8" class="search-input" style="width:100%;" />' +
+               '<label>2. 范围一直接温室气体排放核算 (10分)：</label><input type="number" id="ind-e2" max="10" min="0" value="9.5" class="search-input" style="width:100%;" />' +
+               '<label>3. 范围二电力与热力双轨报告 (10分)：</label><input type="number" id="ind-e3" max="10" min="0" value="9.5" class="search-input" style="width:100%;" />' +
+               '<label>4. 范围三排查与底稿证据链 (14分)：</label><input type="number" id="ind-e4" max="14" min="0" value="13.2" class="search-input" style="width:100%;" />' +
              '</div>' +
            '</div>' +
          '</div>' +
        '</div>' +
        '<div class="modal-footer">' +
          '<button class="btn btn--secondary" onclick="closeModal()">取消</button>' +
-         '<button class="btn btn--primary" onclick="closeModal();showToast(\'已保存评阅成绩，系统已自动重新加权计算全队算术均分！\');">保存评分并更新均分</button>' +
+         '<button class="btn btn--primary" onclick="saveIndividualScore(\'' + player.id + '\')">💾 保存个人评分并合成初赛总分</button>' +
        '</div>' +
      '</div>' +
    '</div>';
+ }
+ 
+ function saveIndividualScore(playerId) {
+   const player = adminState.data.individualPlayers.find(p => p.id === playerId);
+   if (!player) return;
+   const p1 = parseFloat(document.getElementById('ind-p1').value) || 0;
+   const p2 = parseFloat(document.getElementById('ind-p2').value) || 0;
+   const p3 = parseFloat(document.getElementById('ind-p3').value) || 0;
+   const p4 = parseFloat(document.getElementById('ind-p4').value) || 0;
+   const e1 = parseFloat(document.getElementById('ind-e1').value) || 0;
+   const e2 = parseFloat(document.getElementById('ind-e2').value) || 0;
+   const e3 = parseFloat(document.getElementById('ind-e3').value) || 0;
+   const e4 = parseFloat(document.getElementById('ind-e4').value) || 0;
+ 
+   player.cProdScore = Math.round((p1 + p2 + p3 + p4) * 10) / 10;
+   player.cEntScore = Math.round((e1 + e2 + e3 + e4) * 10) / 10;
+   closeModal();
+   renderCurrentView();
+   showToast('已完成对【' + player.name + '】的 C 阶段评分！');
+ }
+ 
+ function openMemberDetailedRubric(teamId, memberIdx) {
+   const team = adminState.data.teamRoster.find(t => t.teamId === teamId);
+   if (!team || !team.members[memberIdx]) return;
+   const m = team.members[memberIdx];
+   showToast('已调取组员【' + m.name + '】的 Carbon Agent 建模底稿');
  }
  
  function renderCheckinView() {
