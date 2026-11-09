@@ -119,7 +119,7 @@
      '<div class="stat-card">' +
        '<div class="stat-card__label"><span>参赛企业报名总数</span><span>🏢</span></div>' +
        '<div class="stat-card__val">' + stats.totalEnterprises + ' <span style="font-size:14px;font-weight:400;color:#64748b;">家</span></div>' +
-       '<div class="stat-card__hint">涉及制造业、互联网、新能源、快消等各类企业</div>' +
+       '<div class="stat-card__hint">已提交基础资质申报企业</div>' +
      '</div>' +
      '<div class="stat-card" style="border-left: 4px solid var(--admin-warning);">' +
        '<div class="stat-card__label"><span>待审企业资质申请</span><span>⏳</span></div>' +
@@ -127,41 +127,42 @@
        '<div class="stat-card__hint">48小时服务响应承诺率：98.2%</div>' +
      '</div>' +
      '<div class="stat-card">' +
-       '<div class="stat-card__label"><span>参赛选手总规模</span><span>👥</span></div>' +
-       '<div class="stat-card__val">' + stats.totalPlayers + ' <span style="font-size:14px;font-weight:400;color:#64748b;">人</span></div>' +
-       '<div class="stat-card__hint">企业战队 168 人 · 个人组选手 50 人</div>' +
+       '<div class="stat-card__label"><span>企业组参赛人数</span><span>👥</span></div>' +
+       '<div class="stat-card__val">168 <span style="font-size:14px;font-weight:400;color:#64748b;">人</span></div>' +
+       '<div class="stat-card__hint">已审核通过企业战队正式成员</div>' +
      '</div>' +
-     '<div class="stat-card" style="border-left: 4px solid var(--admin-success);">' +
-       '<div class="stat-card__label"><span>初赛C阶段模型提交数</span><span>📝</span></div>' +
-       '<div class="stat-card__val" style="color:var(--admin-success);">' + stats.cSubmittedCount + ' <span style="font-size:14px;font-weight:400;color:#64748b;">份</span></div>' +
-       '<div class="stat-card__hint">产品碳足迹与企业碳盘查模型</div>' +
+     '<div class="stat-card">' +
+       '<div class="stat-card__label"><span>个人组参赛人数</span><span>👤</span></div>' +
+       '<div class="stat-card__val">50 <span style="font-size:14px;font-weight:400;color:#64748b;">人</span></div>' +
+       '<div class="stat-card__hint">独立报名的社会与高校选手</div>' +
      '</div>' +
    '</div>' +
    '<div class="admin-card">' +
      '<div class="admin-card__header">' +
-       '<div class="admin-card__title"><span>⚠️ 赛事运营关键节点监控 & 今日待办</span></div>' +
-       '<span class="tag tag--info">距离初赛提交截止仅剩 15 天</span>' +
+       '<div class="admin-card__title"><span>📊 C 阶段（量化碳排放）提交与评阅指标</span></div>' +
+       '<span class="tag tag--info">初赛进行中 · 截止 12月06日</span>' +
      '</div>' +
      '<div class="admin-card__body">' +
-       '<div class="alert-banner alert-banner--warning">' +
-         '<span>📌</span>' +
-         '<div><strong>初赛关键提醒：</strong> 11月27日 24:00 起前台所有报名入口将自动失效。当前有 <strong>' + pendingList.length + '</strong> 家企业营业执照等待人工核验，请尽快完成审核以释放密钥。</div>' +
-       '</div>' +
-       '<div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-top:16px;">' +
+       '<div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px;">' +
          '<div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0;">' +
-           '<div style="font-size:13px; font-weight:700; margin-bottom:8px; color:#04252b;">🏢 企业资质快速核验</div>' +
-           '<p style="font-size:12px; color:#64748b; margin-bottom:12px;">国轩高科、蒙牛乳业等企业已上传营业执照，等待专员查验真实性与发密钥。</p>' +
-           '<button class="btn btn--sm btn--primary" onclick="switchNav(\'audit\')">立即前往审核</button>' +
+           '<div style="font-size:12px; color:#64748b; margin-bottom:6px;">产品碳足迹提交总数</div>' +
+           '<div style="font-size:24px; font-weight:800; color:#026961;">88 <span style="font-size:13px;font-weight:400;color:#64748b;">份</span></div>' +
+           '<div style="font-size:12px; color:#94a3b8; margin-top:4px;">企业组 68 份 · 个人组 20 份</div>' +
          '</div>' +
          '<div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0;">' +
-           '<div style="font-size:13px; font-weight:700; margin-bottom:8px; color:#04252b;">✍️ C阶段模型评阅池</div>' +
-           '<p style="font-size:12px; color:#64748b; margin-bottom:12px;">已提交 ' + stats.cSubmittedCount + ' 份碳足迹与盘查模型，专家打分系统已开放链接核阅。</p>' +
-           '<button class="btn btn--sm btn--secondary" onclick="switchNav(\'review\')">查看评阅台</button>' +
+           '<div style="font-size:12px; color:#64748b; margin-bottom:6px;">企业碳盘查提交总数</div>' +
+           '<div style="font-size:24px; font-weight:800; color:#026961;">68 <span style="font-size:13px;font-weight:400;color:#64748b;">份</span></div>' +
+           '<div style="font-size:12px; color:#94a3b8; margin-top:4px;">企业组 52 份 · 个人组 16 份</div>' +
          '</div>' +
          '<div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0;">' +
-           '<div style="font-size:13px; font-weight:700; margin-bottom:8px; color:#04252b;">📱 碳账户打卡实时同步</div>' +
-           '<p style="font-size:12px; color:#64748b; margin-bottom:12px;">微信小程序累计活跃打卡 8,960 人次，支持随时通过 API 拉取最新企业榜与个人榜。</p>' +
-           '<button class="btn btn--sm btn--secondary" onclick="switchNav(\'checkin\')">同步打卡数据</button>' +
+           '<div style="font-size:12px; color:#64748b; margin-bottom:6px;">已评阅模型数量</div>' +
+           '<div style="font-size:24px; font-weight:800; color:#04252b;">62 <span style="font-size:13px;font-weight:400;color:#64748b;">/ 156 份</span></div>' +
+           '<div style="font-size:12px; color:#94a3b8; margin-top:4px;">评阅完成进度：39.7%</div>' +
+         '</div>' +
+         '<div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0;">' +
+           '<div style="font-size:12px; color:#64748b; margin-bottom:6px;">待专家评阅模型</div>' +
+           '<div style="font-size:24px; font-weight:800; color:#d97706;">94 <span style="font-size:13px;font-weight:400;color:#64748b;">份</span></div>' +
+           '<div style="margin-top:6px;"><button class="btn btn--sm btn--primary" onclick="switchNav(\'review\')">进入打分台</button></div>' +
          '</div>' +
        '</div>' +
      '</div>' +
@@ -245,12 +246,10 @@
              '<td style="text-align:right;">' +
                (e.auditStatus === 'PENDING' ? (
                  '<div style="display:flex;gap:6px;justify-content:flex-end;">' +
-                   '<button class="btn btn--sm btn--primary" onclick="approveAuditModal(\'' + e.id + '\')">通过并下发</button>' +
+                   '<button class="btn btn--sm btn--primary" onclick="approveAuditModal(\'' + e.id + '\')">通过</button>' +
                    '<button class="btn btn--sm btn--danger" onclick="rejectAuditModal(\'' + e.id + '\')">驳回</button>' +
                  '</div>'
-               ) : (
-                 '<button class="btn btn--sm btn--secondary" onclick="showToast(\'处理专员：' + (e.auditor || '管理员') + ' · 时间：' + (e.auditTime || '-') + '\')">审核记录</button>'
-               )) +
+               ) : '-') +
              '</td>' +
            '</tr>'
          )).join('') +
@@ -433,7 +432,6 @@
            '<th>当前组员数</th>' +
            '<th>邀请裂变人数</th>' +
            '<th>影响力加成系数</th>' +
-           '<th>C阶段提交进度</th>' +
            '<th style="text-align:right;">操作</th>' +
          '</tr>' +
        '</thead>' +
@@ -441,7 +439,6 @@
          teams.map(t => {
            const ent = adminState.data.enterprises.find(e => e.id === t.teamId) || {};
            const leader = t.members.find(m => m.role === '组长') || {};
-           const submittedCount = t.members.filter(m => m.cProdStatus === '已提交' && m.cEntStatus === '已提交').length;
            return '<tr>' +
              '<td>' +
                '<div style="font-weight:700;color:#04252b;">' + t.teamName + '</div>' +
@@ -452,7 +449,6 @@
              '<td><span class="tag tag--info">' + t.members.length + ' / 10 人</span></td>' +
              '<td>' + (ent.inviteCount || 0) + ' 人</td>' +
              '<td><span class="tag tag--success">+' + (ent.bonusPercent || 0) + '%</span></td>' +
-             '<td><span style="font-size:12px;color:#64748b;">全队 ' + submittedCount + ' / ' + t.members.length + ' 人双项已交</span></td>' +
              '<td style="text-align:right;">' +
                '<button class="btn btn--sm btn--primary" onclick="viewTeamMembersModal(\'' + t.teamId + '\')">查看组员名单</button>' +
              '</td>' +
@@ -472,7 +468,6 @@
            '<th>手机号</th>' +
            '<th>成功邀请人数</th>' +
            '<th>影响力加成</th>' +
-           '<th>碳账户打卡积分</th>' +
          '</tr>' +
        '</thead>' +
        '<tbody>' +
@@ -480,9 +475,8 @@
            '<tr>' +
              '<td style="font-weight:700;color:#04252b;">' + p.name + '</td>' +
              '<td style="font-family:monospace;">' + p.phone + '</td>' +
-             '<td>' + p.inviteSuccessCount + ' 人</td>' +
+             '<td><button class="btn btn--text" style="font-weight:700;color:#026961;" onclick="viewIndividualInviteeModal(\'' + p.id + '\')">' + p.inviteSuccessCount + ' 人 🔍</button></td>' +
              '<td><span class="tag tag--success">+' + p.bonusPercent + '%</span></td>' +
-             '<td><strong style="color:#026961;">' + p.checkinPoints + '</strong> 分</td>' +
            '</tr>'
          )).join('') +
        '</tbody>' +
@@ -514,7 +508,7 @@
                  '<th>姓名</th>' +
                  '<th>手机号</th>' +
                  '<th>邀请人来源</th>' +
-                 '<th>注册状态</th>' +
+                 '<th>报名状态</th>' +
                  '<th>产品碳提交</th>' +
                  '<th>企业碳提交</th>' +
                '</tr>' +
@@ -526,7 +520,7 @@
                    '<td style="font-weight:600;">' + m.name + '</td>' +
                    '<td style="font-family:monospace;">' + m.phone + '</td>' +
                    '<td>' + (m.inviter === '-' ? '-' : '<span class="tag tag--info">由 ' + m.inviter + ' 邀请</span>') + '</td>' +
-                   '<td>' + (m.regStatus === '已注册' ? '<span class="tag tag--success">已注册</span>' : '<span class="tag tag--danger">未注册</span>') + '</td>' +
+                   '<td><span class="tag tag--success">已报名</span></td>' +
                    '<td>' + (m.cProdStatus === '已提交' ? '<span class="tag tag--success">已交 (' + m.cProdScore + '分)</span>' : '<span class="tag tag--neutral">' + m.cProdStatus + '</span>') + '</td>' +
                    '<td>' + (m.cEntStatus === '已提交' ? '<span class="tag tag--success">已交 (' + m.cEntScore + '分)</span>' : '<span class="tag tag--neutral">' + m.cEntStatus + '</span>') + '</td>' +
                  '</tr>'
@@ -537,7 +531,6 @@
        '</div>' +
        '<div class="modal-footer">' +
          '<button class="btn btn--secondary" onclick="closeModal()">关闭</button>' +
-         '<button class="btn btn--primary" onclick="showToast(\'已向未注册组员发送催注册短信通知\');">📲 一键短信提醒未注册队员</button>' +
        '</div>' +
      '</div>' +
    '</div>';
@@ -552,7 +545,7 @@
        '<p>产品碳考题（11.20 16:00 开放下载）与企业碳考题（11.30 00:00 开放下载）严格按题目 1对1 对应，供前台选择主办方产品的选手下载。</p>' +
      '</div>' +
      '<div class="page-header__actions">' +
-       '<button class="btn btn--primary" onclick="showToast(\'已打开新增考题包配置窗口\')">➕ 新增 1对1 考题包</button>' +
+       '<button class="btn btn--primary" onclick="openAddQuestionModal()">➕ 新增 1对1 考题包</button>' +
      '</div>' +
    '</div>' +
    '<div class="alert-banner alert-banner--info">' +
@@ -563,32 +556,24 @@
      '<table class="admin-table">' +
        '<thead>' +
          '<tr>' +
-           '<th>配对题号</th>' +
            '<th>任务一：产品碳足迹考题 (11.20开放)</th>' +
            '<th>任务二：企业碳盘查考题 (11.30开放)</th>' +
            '<th>已分配队伍</th>' +
-           '<th>下载次数</th>' +
-           '<th>状态</th>' +
            '<th style="text-align:right;">操作</th>' +
          '</tr>' +
        '</thead>' +
        '<tbody>' +
-         list.map(q => (
+         list.map((q, idx) => (
            '<tr>' +
-             '<td style="font-family:monospace;font-weight:700;color:#026961;">' + q.pairCode + '</td>' +
              '<td>' +
-               '<div style="font-weight:600;">' + q.prodTaskTitle + '</div>' +
-               '<div style="font-size:11px;color:#64748b;">附件：' + q.prodPkgFile + ' · ' + q.prodOpenTime + '</div>' +
+               '<a href="javascript:void(0)" onclick="showToast(\'正在下载：' + q.prodPkgFile + '\')" style="font-weight:600;color:#026961;text-decoration:none;">📄 ' + q.prodTaskTitle + ' 📥</a>' +
              '</td>' +
              '<td>' +
-               '<div style="font-weight:600;">' + q.corpTaskTitle + '</div>' +
-               '<div style="font-size:11px;color:#64748b;">附件：' + q.corpPkgFile + ' · ' + q.corpOpenTime + '</div>' +
+               '<a href="javascript:void(0)" onclick="showToast(\'正在下载：' + q.corpPkgFile + '\')" style="font-weight:600;color:#026961;text-decoration:none;">📄 ' + q.corpTaskTitle + ' 📥</a>' +
              '</td>' +
              '<td>' + q.assignedTeamsCount + ' 队</td>' +
-             '<td>' + q.downloadCount + ' 次</td>' +
-             '<td><span class="tag tag--success">已发布</span></td>' +
              '<td style="text-align:right;">' +
-               '<button class="btn btn--sm btn--secondary" onclick="showToast(\'正在下载考题包：' + q.pairCode + '\')">下载</button>' +
+               '<button class="btn btn--sm btn--danger" onclick="deleteQuestionPair(' + idx + ')">删除</button>' +
              '</td>' +
            '</tr>'
          )).join('') +
@@ -628,12 +613,12 @@
        '<thead>' +
          '<tr>' +
            '<th>战队企业名称</th>' +
-           '<th>核算对象来源</th>' +
            '<th>战队总人数</th>' +
-           '<th>已提交组员数</th>' +
+           '<th>加成系数</th>' +
+           '<th>产品碳提交人数</th>' +
+           '<th>企业碳提交人数</th>' +
            '<th>C阶段全队均分 (80分)</th>' +
            '<th>E阶段打卡分 (20分)</th>' +
-           '<th>加成系数</th>' +
            '<th>初赛总分</th>' +
            '<th style="text-align:right;">操作</th>' +
          '</tr>' +
@@ -641,15 +626,16 @@
        '<tbody>' +
          list.map(r => {
            const team = adminState.data.teamRoster.find(t => t.teamId === r.teamId) || { members: [] };
-           const submittedCount = team.members.filter(m => m.cProdStatus === '已提交' && m.cEntStatus === '已提交').length;
+           const prodSubmittedCount = team.members.filter(m => m.cProdStatus === '已提交').length;
+           const entSubmittedCount = team.members.filter(m => m.cEntStatus === '已提交').length;
            return '<tr>' +
              '<td style="font-weight:700;color:#04252b;">' + r.teamName + '</td>' +
-             '<td>' + (r.trackChoice === 'SELF_OWNED' ? '<span class="tag tag--info">自有产品</span>' : '<span class="tag tag--neutral">主办方产品</span>') + '</td>' +
              '<td>' + team.members.length + ' 人</td>' +
-             '<td><span class="tag tag--info">' + submittedCount + ' / ' + team.members.length + ' 人</span></td>' +
+             '<td><span class="tag tag--success">+' + Math.round(r.bonusRatio*100) + '%</span></td>' +
+             '<td><span class="tag tag--info">' + prodSubmittedCount + ' / ' + team.members.length + ' 人</span></td>' +
+             '<td><span class="tag tag--info">' + entSubmittedCount + ' / ' + team.members.length + ' 人</span></td>' +
              '<td><strong style="color:#026961;font-size:14px;">' + r.cTeamAvgScore + ' 分</strong></td>' +
              '<td>' + r.eCheckinScore + ' 分</td>' +
-             '<td><span class="tag tag--success">+' + Math.round(r.bonusRatio*100) + '%</span></td>' +
              '<td><strong style="color:#e11d48;font-size:15px;">' + r.prelimTotalScore + '</strong></td>' +
              '<td style="text-align:right;">' +
                '<button class="btn btn--sm btn--primary" onclick="openTeamMemberScoringDetail(\'' + r.teamId + '\')">进入战队逐人打分</button>' +
@@ -1077,3 +1063,124 @@
    renderCurrentView();
    updateBadges();
  });
+ function viewIndividualInviteeModal(playerId) {
+   const player = adminState.data.individualPlayers.find(p => p.id === playerId);
+   if (!player) return;
+   const modalRoot = document.getElementById('modal-root');
+   modalRoot.innerHTML = '<div class="modal-overlay" onclick="closeModal()">' +
+     '<div class="modal-dialog" onclick="event.stopPropagation()">' +
+       '<div class="modal-header">' +
+         '<div class="modal-title">💌 邀请明细列表 · ' + player.name + ' (' + player.phone + ')</div>' +
+         '<button class="modal-close" onclick="closeModal()">×</button>' +
+       '</div>' +
+       '<div class="modal-body">' +
+         '<div class="alert-banner alert-banner--success" style="margin-bottom:12px;">' +
+           '<span>🎁</span>' +
+           '<div>共成功邀请 <strong>' + player.inviteSuccessCount + '</strong> 人完成注册与报名，享受初赛总分 <strong>+' + player.bonusPercent + '%</strong> 影响力加成。</div>' +
+         '</div>' +
+         '<div class="admin-table-container">' +
+           '<table class="admin-table">' +
+             '<thead>' +
+               '<tr>' +
+                 '<th>被邀请人姓名</th>' +
+                 '<th>手机号</th>' +
+                 '<th>参赛赛道</th>' +
+                 '<th>注册/加入时间</th>' +
+                 '<th>状态</th>' +
+               '</tr>' +
+             '</thead>' +
+             '<tbody>' +
+               '<tr>' +
+                 '<td style="font-weight:600;">苏晨曦</td>' +
+                 '<td style="font-family:monospace;">138****9921</td>' +
+                 '<td>个人组</td>' +
+                 '<td style="color:#64748b;font-size:12px;">2026-11-19 14:20:11</td>' +
+                 '<td><span class="tag tag--success">已报名</span></td>' +
+               '</tr>' +
+               '<tr>' +
+                 '<td style="font-weight:600;">赵宇轩</td>' +
+                 '<td style="font-family:monospace;">139****4412</td>' +
+                 '<td>个人组</td>' +
+                 '<td style="color:#64748b;font-size:12px;">2026-11-20 09:15:32</td>' +
+                 '<td><span class="tag tag--success">已报名</span></td>' +
+               '</tr>' +
+             '</tbody>' +
+           '</table>' +
+         '</div>' +
+       '</div>' +
+       '<div class="modal-footer">' +
+         '<button class="btn btn--secondary" onclick="closeModal()">关闭</button>' +
+       '</div>' +
+     '</div>' +
+   '</div>';
+ }
+ 
+ function deleteQuestionPair(idx) {
+   if (confirm('确认删除该 1对1 考题包？')) {
+     adminState.data.questionPairs.splice(idx, 1);
+     renderCurrentView();
+     showToast('已删除考题包');
+   }
+ }
+ 
+ function openAddQuestionModal() {
+   const modalRoot = document.getElementById('modal-root');
+   modalRoot.innerHTML = '<div class="modal-overlay" onclick="closeModal()">' +
+     '<div class="modal-dialog modal-dialog--lg" onclick="event.stopPropagation()">' +
+       '<div class="modal-header">' +
+         '<div class="modal-title">➕ 新增 1对1 对应考题包</div>' +
+         '<button class="modal-close" onclick="closeModal()">×</button>' +
+       '</div>' +
+       '<div class="modal-body">' +
+         '<div style="display:flex; flex-direction:column; gap:14px; font-size:13px;">' +
+           '<div>' +
+             '<label style="font-weight:600; display:block; margin-bottom:4px;">* 任务一：产品碳足迹考题名称：</label>' +
+             '<input type="text" id="new-prod-title" class="search-input" style="width:100%;" placeholder="例如：新能源商用车动力电池全生命周期碳足迹核算" />' +
+           '</div>' +
+           '<div>' +
+             '<label style="font-weight:600; display:block; margin-bottom:4px;">* 任务一附件文件 (ZIP/PDF)：</label>' +
+             '<input type="file" style="font-size:12px;" />' +
+           '</div>' +
+           '<div>' +
+             '<label style="font-weight:600; display:block; margin-bottom:4px;">* 任务二：对应企业碳盘查考题名称：</label>' +
+             '<input type="text" id="new-corp-title" class="search-input" style="width:100%;" placeholder="例如：锂电池制造基地组织温室气体范围一二三盘查" />' +
+           '</div>' +
+           '<div>' +
+             '<label style="font-weight:600; display:block; margin-bottom:4px;">* 任务二附件文件 (ZIP/PDF)：</label>' +
+             '<input type="file" style="font-size:12px;" />' +
+           '</div>' +
+         '</div>' +
+       '</div>' +
+       '<div class="modal-footer">' +
+         '<button class="btn btn--secondary" onclick="closeModal()">取消</button>' +
+         '<button class="btn btn--primary" onclick="confirmAddQuestionPair()">确认添加并发布</button>' +
+       '</div>' +
+     '</div>' +
+   '</div>';
+ }
+ 
+ function confirmAddQuestionPair() {
+   const prodTitle = document.getElementById('new-prod-title')?.value.trim();
+   const corpTitle = document.getElementById('new-corp-title')?.value.trim();
+   if (!prodTitle || !corpTitle) {
+     alert('请填写完整的产品碳与企业碳考题名称');
+     return;
+   }
+   adminState.data.questionPairs.unshift({
+     pairCode: '#PAIR-2026-NEW',
+     industry: '通用/定制',
+     prodTaskTitle: prodTitle,
+     prodOpenTime: '2026-11-20 16:00',
+     prodPkgFile: '新考题_产品碳_' + Date.now() + '.zip',
+     corpTaskTitle: corpTitle,
+     corpOpenTime: '2026-11-30 00:00',
+     corpPkgFile: '新考题_企业碳_' + Date.now() + '.zip',
+     assignedTeamsCount: 0,
+     downloadCount: 0,
+     status: 'RELEASED',
+   });
+   closeModal();
+   renderCurrentView();
+   showToast('已成功新增 1对1 配对考题包！');
+ }
+ 
