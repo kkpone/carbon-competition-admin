@@ -143,7 +143,7 @@
        '<span class="tag tag--info">初赛进行中 · 截止 12月06日</span>' +
      '</div>' +
      '<div class="admin-card__body">' +
-       '<div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px;">' +
+       '<div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:16px;">' +
          '<div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0;">' +
            '<div style="font-size:12px; color:#64748b; margin-bottom:6px;">产品碳足迹提交总数</div>' +
            '<div style="font-size:24px; font-weight:800; color:#026961;">88 <span style="font-size:13px;font-weight:400;color:#64748b;">份</span></div>' +
@@ -153,16 +153,6 @@
            '<div style="font-size:12px; color:#64748b; margin-bottom:6px;">企业碳盘查提交总数</div>' +
            '<div style="font-size:24px; font-weight:800; color:#026961;">68 <span style="font-size:13px;font-weight:400;color:#64748b;">份</span></div>' +
            '<div style="font-size:12px; color:#94a3b8; margin-top:4px;">企业组 52 份 · 个人组 16 份</div>' +
-         '</div>' +
-         '<div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0;">' +
-           '<div style="font-size:12px; color:#64748b; margin-bottom:6px;">已评阅模型数量</div>' +
-           '<div style="font-size:24px; font-weight:800; color:#04252b;">62 <span style="font-size:13px;font-weight:400;color:#64748b;">/ 156 份</span></div>' +
-           '<div style="font-size:12px; color:#94a3b8; margin-top:4px;">评阅完成进度：39.7%</div>' +
-         '</div>' +
-         '<div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0;">' +
-           '<div style="font-size:12px; color:#64748b; margin-bottom:6px;">待专家评阅模型</div>' +
-           '<div style="font-size:24px; font-weight:800; color:#d97706;">94 <span style="font-size:13px;font-weight:400;color:#64748b;">份</span></div>' +
-           '<div style="margin-top:6px;"><button class="btn btn--sm btn--primary" onclick="switchNav(\'review\')">进入打分台</button></div>' +
          '</div>' +
        '</div>' +
      '</div>' +
@@ -209,9 +199,9 @@
            '<th>企业名称</th>' +
            '<th>统一社会信用代码</th>' +
            '<th>组长信息</th>' +
-           '<th>营业执照 / Logo</th>' +
+           '<th>营业执照</th>' +
+           '<th>企业Logo</th>' +
            '<th>审核状态</th>' +
-           '<th>专属碳账户密钥</th>' +
            '<th style="text-align:right;">操作</th>' +
          '</tr>' +
        '</thead>' +
@@ -229,19 +219,17 @@
                '<div style="font-size:12px;color:#64748b;font-family:monospace;">' + e.leaderPhone + '</div>' +
              '</td>' +
              '<td>' +
-               '<div style="display:flex;gap:6px;align-items:center;">' +
-                 '<button class="btn btn--sm btn--secondary" onclick="viewLicenseModal(\'' + e.id + '\')">📄 预览执照</button>' +
-                 (e.logoUrl ? '<span title="已上传企业Logo" style="cursor:help;">🖼️</span>' : '<span title="未上传Logo" style="color:#cbd5e1;">-</span>') +
-               '</div>' +
+             '<td>' +
+               '<button class="btn btn--sm btn--secondary" onclick="viewLicenseModal(\'' + e.id + '\')">📄 预览执照</button>' +
+             '</td>' +
+             '<td>' +
+               (e.logoUrl ? '<button class="btn btn--sm btn--secondary" onclick="viewLogoModal(\'' + e.id + '\')">🖼️ 预览Logo</button>' : '<span style="color:#94a3b8;font-size:12px;">未上传</span>') +
              '</td>' +
              '<td>' +
                (e.auditStatus === 'APPROVED' ? '<span class="tag tag--success">✅ 已通过</span>' : '') +
                (e.auditStatus === 'PENDING' ? '<span class="tag tag--warning">⏳ 待审核</span>' : '') +
                (e.auditStatus === 'REJECTED' ? '<span class="tag tag--danger">❌ 已驳回</span>' : '') +
                (e.rejectReason ? '<div style="font-size:11px;color:#ef4444;margin-top:4px;max-width:160px;" title="' + e.rejectReason + '">原因：' + e.rejectReason + '</div>' : '') +
-             '</td>' +
-             '<td>' +
-               (e.secretKey ? '<span style="font-family:monospace;font-weight:700;color:#026961;">' + e.secretKey + '</span>' : '<span style="color:#94a3b8;">审核后生成</span>') +
              '</td>' +
              '<td style="text-align:right;">' +
                (e.auditStatus === 'PENDING' ? (
@@ -442,7 +430,6 @@
            return '<tr>' +
              '<td>' +
                '<div style="font-weight:700;color:#04252b;">' + t.teamName + '</div>' +
-               '<div style="font-size:11px;color:#64748b;">密钥：' + (ent.secretKey || '-') + '</div>' +
              '</td>' +
              '<td>' + (leader.name || '-') + '</td>' +
              '<td style="font-family:monospace;">' + (leader.phone || '-') + '</td>' +
@@ -598,9 +585,8 @@
    '<div style="display:flex; gap:10px; margin-bottom:16px;">' +
      '<button class="btn ' + (tab==='PRELIM_C_ENT'?'btn--primary':'btn--secondary') + '" onclick="adminState.reviewTab=\'PRELIM_C_ENT\';renderCurrentView();">🏢 初赛 C 阶段 · 企业组评审 (全队均分)</button>' +
      '<button class="btn ' + (tab==='PRELIM_C_IND'?'btn--primary':'btn--secondary') + '" onclick="adminState.reviewTab=\'PRELIM_C_IND\';renderCurrentView();">👤 初赛 C 阶段 · 个人组评审</button>' +
-     '<button class="btn ' + (tab==='FINAL_ROS'?'btn--primary':'btn--secondary') + '" onclick="adminState.reviewTab=\'FINAL_ROS\';renderCurrentView();">🏆 决赛 R / O / S 方案与答辩评审 (100分)</button>' +
    '</div>' +
-   (tab === 'PRELIM_C_ENT' ? renderPrelimCEntTable(list) : (tab === 'PRELIM_C_IND' ? renderPrelimCIndTable() : renderFinalRosReviewTable(list)));
+   (tab === 'PRELIM_C_IND' ? renderPrelimCIndTable() : renderPrelimCEntTable(list));
  }
  
  function renderPrelimCEntTable(list) {
@@ -1184,3 +1170,21 @@
    showToast('已成功新增 1对1 配对考题包！');
  }
  
+
+function viewLogoModal(entId) {
+  const ent = adminState.data.enterprises.find(e => e.id === entId);
+  if (!ent || !ent.logoUrl) return;
+  const modalRoot = document.getElementById("modal-root");
+  modalRoot.innerHTML = '<div class="modal-overlay" onclick="closeModal()">' +
+    '<div class="modal-dialog" style="max-width:380px;" onclick="event.stopPropagation()">' +
+      '<div class="modal-header">' +
+        '<div class="modal-title">🖼️ 企业Logo预览 · ' + ent.name + '</div>' +
+        '<button class="modal-close" onclick="closeModal()">×</button>' +
+      '</div>' +
+      '<div class="modal-body" style="text-align:center;padding:24px;">' +
+        '<img src="' + ent.logoUrl + '" style="max-width:180px;max-height:180px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,0.1);" />' +
+      '</div>' +
+      '<div class="modal-footer">        <button class="btn btn--secondary" onclick="closeModal()">关闭</button>      </div>' +
+    '</div>' +
+  '</div>';
+}
