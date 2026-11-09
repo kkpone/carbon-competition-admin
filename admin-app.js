@@ -1067,7 +1067,19 @@
  
 document.addEventListener('DOMContentLoaded', () => {
   const hash = window.location.hash.replace('#', '');
-  if (hash && ['overview', 'audit', 'teams', 'questions', 'review'].includes(hash)) {
+  if (hash === 'modal-score') {
+    switchNav('review');
+    setTimeout(() => openTeamMemberScoringDetail('TEAM-2026-001'), 50);
+  } else if (hash === 'modal-invite') {
+    switchNav('teams');
+    setTimeout(() => viewIndividualInviteeModal('IND-2026-001'), 50);
+  } else if (hash === 'modal-question') {
+    switchNav('questions');
+    setTimeout(() => openAddQuestionModal(), 50);
+  } else if (hash === 'modal-license') {
+    switchNav('audit');
+    setTimeout(() => viewLicenseModal('ENT-001'), 50);
+  } else if (hash && ['overview', 'audit', 'teams', 'questions', 'review'].includes(hash)) {
     switchNav(hash);
   } else {
     renderCurrentView();
