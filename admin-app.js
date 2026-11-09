@@ -1065,10 +1065,15 @@
    '</div>';
  }
  
- document.addEventListener('DOMContentLoaded', () => {
-   renderCurrentView();
-   updateBadges();
- });
+document.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash.replace('#', '');
+  if (hash && ['overview', 'audit', 'teams', 'questions', 'review'].includes(hash)) {
+    switchNav(hash);
+  } else {
+    renderCurrentView();
+  }
+  updateBadges();
+});
  function viewIndividualInviteeModal(playerId) {
    const player = adminState.data.individualPlayers.find(p => p.id === playerId);
    if (!player) return;
